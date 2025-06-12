@@ -1,5 +1,22 @@
-public class Solution {
-    public static long calculateTime(int[] diffs, int[] times, int level) {
+class Solution {
+    public int solution(int[] diffs, int[] times, long limit) {
+        int left = 1, right = 100000;
+        int answer = 0;
+
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (canSolve(diffs, times, limit, mid)) {
+                answer = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        return answer;
+    }
+
+    private boolean canSolve(int[] diffs, int[] times, long limit, int level) {
         long totalTime = 0;
         int prevTime = 0;
         
@@ -11,30 +28,12 @@ public class Solution {
                 totalTime += timeCur;
             } else {
                 int mistakes = diff - level;
-                totalTime += (long) (mistakes * (timeCur + prevTime) + timeCur);
+                totalTime += (mistakes * (timeCur + prevTime) + timeCur);
             }
             
             prevTime = timeCur;
         }
         
-        return totalTime;
-    }
-
-    public static int solution(int[] diffs, int[] times, long limit) {
-        int left = 1;
-        int right = 100000;
-        
-        while (left < right) {
-            int mid = (left + right) / 2;
-            long totalTime = calculateTime(diffs, times, mid);
-            
-            if (totalTime <= limit) {
-                right = mid;
-            } else {
-                left = mid + 1;
-            }
-        }
-        
-        return left;
+        return totalTime <= limit;
     }
 }
