@@ -5,7 +5,7 @@ class Solution {
 
         while (left <= right) {
             int mid = (left + right) / 2;
-            if (canSolve(diffs, times, limit, mid)) {
+            if (check(diffs, times, limit, mid)) {
                 answer = mid;
                 right = mid - 1;
             } else {
@@ -16,7 +16,7 @@ class Solution {
         return answer;
     }
 
-    private boolean canSolve(int[] diffs, int[] times, long limit, int level) {
+    private boolean check(int[] diffs, int[] times, long limit, int level) {
         long totalTime = 0;
         int prevTime = 0;
         
