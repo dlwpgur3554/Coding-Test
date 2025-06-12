@@ -1,50 +1,39 @@
-import java.util.*;
+import java.util.Arrays;
 
 public class Solution {
-    static int[][] info;
-    static int n, m;
-    static int[][][] dp;
+    public int solution(int[][] info, int n, int m) {
+        int itemCount = info.length;
+        int INF = 999999;
+        int[][] dp = new int[itemCount + 1][m];
+        
+        for (int i = 0; i <= itemCount; i++) {
+            Arrays.fill(dp[i], INF);
+        }
+        dp[0][0] = 0;
 
-    public static int solution(int[][] _info, int _n, int _m) {
-        info = _info;
-        n = _n;
-        m = _m;
-        int len = info.length;
+        for (int i = 0; i < itemCount; i++) {
+            int aTrace = info[i][0];
+            int bTrace = info[i][1];
+            for (int j = 0; j < m; j++) {
+                if (dp[i][j] == INF) continue;
 
-        dp = new int[len + 1][n][m];
-        for (int[][] layer : dp) {
-            for (int[] row : layer) {
-                Arrays.fill(row, -2);
+                int nextATrace = dp[i][j] + aTrace;
+                if (nextATrace < n) {
+                    dp[i + 1][j] = Math.min(dp[i + 1][j], nextATrace);
+                }
+
+                int nextBTrace = j + bTrace;
+                if (nextBTrace < m) {
+                    dp[i + 1][nextBTrace] = Math.min(dp[i + 1][nextBTrace], dp[i][j]);
+                }
             }
         }
 
-        return dfs(0, 0, 0);
-    }
-
-    private static int dfs(int idx, int aTrace, int bTrace) {
-        if (aTrace >= n || bTrace >= m) return -1;
-        if (idx == info.length) return 0;
-
-        if (dp[idx][aTrace][bTrace] != -2) return dp[idx][aTrace][bTrace];
-
-        int res = Integer.MAX_VALUE;
-
-        int aNext = dfs(idx + 1, aTrace + info[idx][0], bTrace);
-        if (aNext != -1) {
-            res = Math.min(res, aNext + info[idx][0]);
+        int result = INF;
+        for (int j = 0; j < m; j++) {
+            result = Math.min(result, dp[itemCount][j]);
         }
 
-        int bNext = dfs(idx + 1, aTrace, bTrace + info[idx][1]);
-        if (bNext != -1) {
-            res = Math.min(res, bNext);
-        }
-
-        if (res == Integer.MAX_VALUE) {
-            dp[idx][aTrace][bTrace] = -1;
-        } else {
-            dp[idx][aTrace][bTrace] = res;
-        }
-
-        return dp[idx][aTrace][bTrace];
+        return result == INF ? -1 : result;
     }
 }
