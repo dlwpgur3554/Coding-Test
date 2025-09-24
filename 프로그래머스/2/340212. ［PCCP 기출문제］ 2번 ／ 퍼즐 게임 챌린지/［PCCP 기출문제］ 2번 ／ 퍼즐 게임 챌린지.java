@@ -1,22 +1,22 @@
 class Solution {
     public int solution(int[] diffs, int[] times, long limit) {
-        int left = 1, right = 100000;
+        int min = 1, max = 100000;
         int answer = 0;
 
-        while (left <= right) {
-            int mid = (left + right) / 2;
+        while (min <= max) {
+            int mid = (min + max) / 2;
             if (check(diffs, times, limit, mid)) {
                 answer = mid;
-                right = mid - 1;
+                max = mid - 1;
             } else {
-                left = mid + 1;
+                min = mid + 1;
             }
         }
 
         return answer;
     }
 
-    private boolean check(int[] diffs, int[] times, long limit, int level) {
+    public boolean check(int[] diffs, int[] times, long limit, int level) {
         long totalTime = 0;
         int prevTime = 0;
         
